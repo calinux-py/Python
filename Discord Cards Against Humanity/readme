@@ -1,0 +1,33 @@
+Cards Against Humanity
+
+This script is a Discord bot implementation of the popular party game "Cards Against Humanity." It allows players to participate in the game by drawing and combining black and white cards.
+Usage
+
+    Start the game by typing !play. This command will assign you six white cards through direct messages.
+    Draw a black card by typing !b. The bot will respond with the black card prompt.
+    Add your chosen white card to the black card by typing !c #, where # corresponds to the number of your white card. For example, to add the second white card, use !c 2.
+    The bot will respond with the combined response, showing the black card and the selected white card.
+    The used white card will be replaced with a new one from your deck.
+    Repeat steps 2-4 to continue playing and have fun!
+
+To quit the game or restart, type !quit at any time.
+Commands
+
+    !help: Displays the instructions and commands for playing the game.
+    !play: Starts the game or allows you to join an ongoing game.
+    !b: Draws a new black card.
+    !c #: Adds your chosen white card to the black card. Replace # with the number corresponding to your white card.
+    !quit: Quits the game.
+
+Setup
+
+    Create a Discord bot and obtain the bot token.
+    Replace 'YOUR DISCORD BOT TOKEN HERE' in the last line of the script with your Discord bot token.
+    Prepare the black card entries by populating the blackcards.txt file with each entry on a new line.
+    Prepare the white card entries by populating the whitecards.txt file with each entry separated by commas.
+
+Note: Make sure to install the necessary dependencies, including the discord library.
+Author
+
+    Name: CaliNux
+    Date: 6/20/23

@@ -15,7 +15,7 @@ image = Image.open(image_path)
 
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
-image = image.resize((screen_width, screen_height), Image.ANTIALIAS)
+image = image.resize((screen_width, screen_height), ImageFilter.LANCZOS)
 
 image_tk = ImageTk.PhotoImage(image)
 

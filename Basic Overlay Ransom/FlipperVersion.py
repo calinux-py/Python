@@ -8,6 +8,7 @@ temp_dir = os.environ['TEMP']
 # Construct the complete image path
 image_path = os.path.join(temp_dir, 'datsmean.png')
 
+
 window = tk.Tk()
 window.attributes('-fullscreen', True)
 
@@ -15,7 +16,7 @@ image = Image.open(image_path)
 
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
-image = image.resize((screen_width, screen_height), ImageFilter.LANCZOS)
+image = image.resize((screen_width, screen_height), Image.LANCZOS)
 
 image_tk = ImageTk.PhotoImage(image)
 

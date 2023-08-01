@@ -1,7 +1,12 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import os
 
-image_path = r"$env:TEMP\datsmean.png"
+# Get the temporary directory path
+temp_dir = os.environ['TEMP']
+
+# Construct the complete image path
+image_path = os.path.join(temp_dir, 'datsmean.png')
 
 window = tk.Tk()
 window.attributes('-fullscreen', True)

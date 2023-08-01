@@ -54,7 +54,7 @@ password_entry.pack()
 
 def check_password():
     password = password_entry.get()
-    if password == "pass":
+    if password == "pass":         # Change password here or whateveer
         window.destroy()
     else:
         password_entry.delete(0, tk.END)

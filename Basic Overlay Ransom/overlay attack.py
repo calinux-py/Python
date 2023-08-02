@@ -1,5 +1,5 @@
-# overlay ransomeware
-# created by calinux
+# This script is for educational purposes. Only a fool would actually try to harm someone using this script. All scripts involved in this process purposely lack
+# clean up code for the final steps. You will get caught. Ransomware is a crime and scamming is evil. Dont be evil.
 
 import tkinter as tk
 from PIL import Image, ImageTk

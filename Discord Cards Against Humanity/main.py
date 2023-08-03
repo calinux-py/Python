@@ -19,8 +19,6 @@ with open("whitecards.txt", "r") as file:
 # Remove leading/trailing whitespace from entries
 entries = [entry.strip() for entry in entries]
 
-chosen_entry = random.choice(entries)
-
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
@@ -28,6 +26,9 @@ client = discord.Client(intents=intents)
 # Dictionary to store the black and white cards for each player
 player_cards = {}
 current_black_card = ""
+
+# List to store the white card submissions from players
+white_card_submissions = []
 
 
 # Function to generate a random white card
@@ -53,14 +54,17 @@ async def on_message(message):
         return
 
     if message.content == "!help":
-        await message.channel.send("**Here's how to play!**\n\n```CARDS AGAINST HUMANITY\n\nInstructions:\n1 - Start playing by typing: !play\n\n2 - After you start, you will be DM'd 6 'White Cards.'\n\n3 - Draw a 'Black Card' by typing: !b\n\n4 - Add your White Card to the Black Card by chosing the number corresponding with your White Card and typing: !c #, for example, !c 2\n\n5 - The used White Card will be deleted from your deck and a new one will be added.\n\n6 - Repeat steps 3-4 and have fun!\n\nType '!quit' at anytime to stop playing or restart.\n\nCommands:\n!play - start game or join game.\n!b - draw black card.\n!c # - add your card to the black card [eg !c 2].\n!quit - quit game.```")  # Display help message
+        await message.channel.send(
+            "**Here's how to play!**\n\n```CARDS AGAINST HUMANITY\n\nInstructions:\n1 - Start playing by typing: !play\n\n2 - After you start, you will be DM'd 6 'White Cards.'\n\n3 - Draw a 'Black Card' by typing: !b\n\n4 - Add your White Card to the Black Card by choosing the number corresponding with your White Card and typing: !c #, for example, !c 2\n\n5 - The used White Card will be deleted from your deck and a new one will be added.\n\n6 - Repeat steps 3-4 and have fun!\n\nType '!quit' at anytime to stop playing or restart.\n\nCommands:\n!play - start game or join game.\n!b - draw black card.\n!c # - add your card to the black card [eg !c 2].\n!quit - quit game.```")  # Display help message
         return
 
     if message.content.startswith('!p') or message.content.startswith('!s') or message.content.startswith(
             '!play') or message.content.startswith('!start'):
         if str(message.author.id) in player_cards:
-            await message.channel.send('You\'re already playing!')
+            await message.channel.send('**You\'re already playing!**')
             return
+        await message.channel.send(
+            "**New Player Joined**!\nWhite Cards have been sent to your DMs!\n```Instructions:\n\n1 - Draw a 'Black Card' by typing: !b\n\n2 - Add your White Card to the Black Card by choosing the number corresponding with your White Card and typing: !c #, for example, !c 2\n\n3 - The used White Card will be deleted from your deck and a new one will be added.\n\n4 - Repeat steps 1-2 and have fun!\n\nType '!quit' at anytime to stop playing or restart.```")
         player_cards[str(message.author.id)] = []
 
         # Deal white cards
@@ -79,9 +83,10 @@ async def on_message(message):
     elif message.content.startswith('!bc') or message.content.startswith('!b') or message.content.startswith(
             '!black') or message.content.startswith('!blackcard'):
         current_black_card = generate_black_card()
-        await message.channel.send(f'Black Card: {current_black_card}')
+        await message.channel.send(f'Black Card: **{current_black_card}**')
+        await message.channel.send('```waiting all players White Card submissions...```')
 
-    elif message.content.startswith('!c') or message.content.startswith('!wc') or message.content.startswith(
+    elif message.content.startswith('!c') or message.content.startswith('!wc') or message.content.startswith('!card') or message.content.startswith(
             '!white') or message.content.startswith('!whitecard'):
         player_id = str(message.author.id)
         if player_id not in player_cards:
@@ -92,7 +97,7 @@ async def on_message(message):
         try:
             card_number = int(message.content.split(' ')[1])
         except (ValueError, IndexError):
-            await message.channel.send('Invalid command format. Please use !play # (e.g., !play 2).')
+            await message.channel.send('Invalid command format. Please use !whitecard # (e.g., !whitecard 2).')
             return
 
         # Check if the card number is within the player's card range
@@ -103,12 +108,8 @@ async def on_message(message):
         # Get the chosen white card
         white_card = player_cards[player_id][card_number - 1]
 
-        # Combine the white and black cards to create a response
-        response = f'Black Card: {current_black_card}\nWhite Card {card_number}: {white_card}'
-        combined_text = f'{current_black_card.replace("___", white_card)}'
-
-        # Send the response
-        await message.channel.send(response)
+        # Add the white card submission to the list
+        white_card_submissions.append(white_card)
 
         # Generate a new white card with the same number
         new_white_card = generate_white_card()
@@ -120,5 +121,26 @@ async def on_message(message):
             if dm_message.content == f'{card_number} - White Card: {white_card}':
                 await dm_message.delete()
 
+        # Check if all players have submitted their white cards
+        if len(white_card_submissions) == len(player_cards):
+            # Randomize the order of white card submissions
+            random.shuffle(white_card_submissions)
 
-client.run('YOUR DISCORD BOT TOKEN HERE')
+            # Combine the white and black cards to create responses
+            responses = []
+            for submission in white_card_submissions:
+                response = f'Black Card: **{current_black_card}**\nWhite Card: **{submission}**'
+                responses.append(response)
+
+            # Send all the responses
+            for response in responses:
+                await message.channel.send(response)
+
+            # Clear the white card submissions
+            white_card_submissions.clear()
+
+    else:
+        await message.channel.send()
+
+
+client.run('YOUR DISCORD TOKEN')

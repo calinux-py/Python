@@ -6,7 +6,7 @@ import tempfile
 import sys
 import requests
 
-WEBHOOK_URL = "YOUR DISCORD WEBHOOK HERE"
+#WEBHOOK_URL = "YOUR DISCORD WEBHOOK HERE"
 
 
 def get_current_subnet():

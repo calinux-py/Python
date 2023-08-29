@@ -1,4 +1,5 @@
 # Screenshot Bot - Discord Webhook Automation
+![](https://img.shields.io/badge/-PowerShell-blue)
 
 ## Overview
 

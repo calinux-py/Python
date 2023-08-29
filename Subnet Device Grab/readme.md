@@ -1,5 +1,6 @@
 # Subnet Scanner and Discord Uploader
 ![](https://img.shields.io/badge/-Python-purple)
+![](https://img.shields.io/badge/-Windows-yellow)
 
 
 This Python script allows you to scan the devices connected to your local network subnet and upload the results to a Discord channel using a webhook. The script utilizes `netifaces`, `scapy`, and `requests` modules to achieve this functionality.

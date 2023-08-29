@@ -1,5 +1,6 @@
 # Screenshot Bot - Discord Webhook Automation
 ![](https://img.shields.io/badge/-Python-purple)
+![](https://img.shields.io/badge/-Windows-yellow)
 
 
 ## Overview

@@ -20,12 +20,6 @@ This Python script provides movie recommendations based on user-supplied tags. I
 
 ## Installation
 
-### Clone the Repository
-
-```bash
-git clone https://github.com/your-username/your-repo-name.git
-```
-
 ### Install Dependencies
 
 Run the following command to install the required packages.

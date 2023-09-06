@@ -207,7 +207,7 @@ if __name__ == '__main__':
     app.setStyle('Fusion')
 
     window = MovieApp()
-    window.setWindowTitle('Movie Recommendations')
+    window.setWindowTitle('MovieGuru')
     window.resize(500, 400)
     window.show()
     sys.exit(app.exec_())

@@ -1,4 +1,6 @@
 # Movie Guru with OpenAI API
+![](https://img.shields.io/badge/-Python-purple)
+![](https://img.shields.io/badge/-Windows-yellow)
 
 This Python script provides movie recommendations based on user-supplied tags. It uses PyQt5 for the GUI and the OpenAI API for generating the recommendations.
 

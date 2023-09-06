@@ -1,9 +1,11 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QTextEdit, QPushButton, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QTextEdit, QPushButton, QLabel, QSizePolicy
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import Qt
 import sys
 import openai
 import configparser
+import datetime
+import os
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -37,13 +39,39 @@ class SettingsWindow(QWidget):
             config.write(configfile)
         self.close()
 
+
+class HistoryWindow(QWidget):
+    def __init__(self, history):
+        super(HistoryWindow, self).__init__()
+        self.initUI(history)
+
+    def initUI(self, history):
+        self.setStyleSheet("background-color: #111111;")
+
+        layout = QVBoxLayout()
+
+        self.historyBox = QTextEdit(self)
+        self.historyBox.setStyleSheet("background-color: #111111; color: white;")
+
+        self.historyBox.setReadOnly(True)
+        self.historyBox.setPlainText("\n".join(history))
+
+        layout.addWidget(self.historyBox)
+
+        self.setLayout(layout)
+
+
 class MovieApp(QWidget):
     def __init__(self):
         super(MovieApp, self).__init__()
         self.initUI()
+        self.search_history = []
 
     def initUI(self):
         layout = QVBoxLayout()
+        main_layout = QVBoxLayout()
+        top_layout = QHBoxLayout()
+        top_layout.addStretch()
 
         self.replyBox = QTextEdit(self)
         self.replyBox.setReadOnly(True)
@@ -63,6 +91,23 @@ class MovieApp(QWidget):
         self.settingsBtn.clicked.connect(self.open_settings)
         layout.addWidget(self.settingsBtn)
 
+        self.historyBtn = QPushButton('History', self)
+        self.historyBtn.clicked.connect(self.open_history)
+        self.historyBtn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
+        self.exportBtn = QPushButton('Export', self)
+        self.exportBtn.clicked.connect(self.export_history)
+        self.exportBtn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
+        top_layout.addWidget(self.exportBtn, alignment=Qt.AlignRight)
+        top_layout.addWidget(self.historyBtn, alignment=Qt.AlignRight)
+        main_layout.addLayout(top_layout)
+        main_layout.addWidget(self.replyBox)
+        main_layout.addWidget(self.tagEntry)
+        main_layout.addWidget(self.searchBtn)
+        main_layout.addWidget(self.settingsBtn)
+
+        self.setLayout(main_layout)
         self.setLayout(layout)
 
         self.retry_count = 0
@@ -82,6 +127,14 @@ class MovieApp(QWidget):
         palette.setColor(QPalette.Highlight, QColor(142, 45, 197))
         palette.setColor(QPalette.HighlightedText, QColor(0, 0, 0))
         self.setPalette(palette)
+
+    def export_history(self):
+        current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+        file_name = f"{current_date}-MovieGuru.txt"
+        desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+        with open(os.path.join(desktop, file_name), 'w') as f:
+            f.write('\n'.join(self.search_history))
+        self.replyBox.append("Search history exported successfully.")
 
     def on_text_changed(self):
         if self.retry_count == 0:
@@ -118,6 +171,12 @@ class MovieApp(QWidget):
         )
         return response.choices[0].text.strip()
 
+    def open_history(self):
+        self.history_window = HistoryWindow(self.search_history)
+        self.history_window.setWindowTitle('Search History')
+        self.history_window.resize(450, 350)
+        self.history_window.show()
+
     def perform_search(self):
         new_tags = [tag.strip() for tag in self.tagEntry.text().split(',')]
         self.update_searched_tags(new_tags)
@@ -127,6 +186,8 @@ class MovieApp(QWidget):
 
         self.replyBox.setText(response)
         self.replyBox.append(f"\nCurrent tags being searched: {' '.join(self.searched_tags)}")
+
+        self.search_history.append(f"Searched for: {', '.join(new_tags)}\nReceived: {response}")
 
         self.tagEntry.clear()
         self.retry_count += 1
@@ -147,7 +208,6 @@ if __name__ == '__main__':
 
     window = MovieApp()
     window.setWindowTitle('Movie Recommendations')
-    window.resize(400, 300)
+    window.resize(500, 400)
     window.show()
-
     sys.exit(app.exec_())

@@ -187,7 +187,7 @@ class MovieApp(QWidget):
         self.replyBox.setText(response)
         self.replyBox.append(f"\nCurrent tags being searched: {' '.join(self.searched_tags)}")
 
-        self.search_history.append(f"Searched for: {', '.join(new_tags)}\nReceived: {response}")
+        self.search_history.append(f"Tags: {', '.join(new_tags)}\n\n{response}")
 
         self.tagEntry.clear()
         self.retry_count += 1

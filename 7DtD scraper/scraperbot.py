@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import discord
 from discord.ext import tasks
 #discord api token
-TOKEN = 'YOUR DISCORD TOKEN'
+TOKEN = 'Your discord API'
 
 CHANNEL_ID = 1155345464741331055  # replace with your channel ID
 
@@ -42,9 +42,11 @@ async def send_server_info():
         if first_run or (last_player_count is not None and player_count != last_player_count):
             channel = client.get_channel(CHANNEL_ID)
             if channel:
+                await channel.send("**-----------------------------------------**")
                 await channel.send(f"\n```Current Player Count: {player_count} on Server 3.```")
                 await channel.send(f"```Server Uptime: {uptime}```")
                 await channel.send(f"```World Age: {world_age}```")
+                await channel.send("**-----------------------------------------**")
             first_run = False
         last_player_count = player_count
 

@@ -21,7 +21,7 @@ def get_server_info():
         soup = BeautifulSoup(response.content, 'html.parser')
         player_count_text = soup.find(string="Player count").find_next().text.strip()
         player_count_numeric = int(player_count_text.split('/')[0])
-        uptime_text = soup.find(string="Uptime").find_next().text.strip()
+        uptime_text = soup.find(string="Current server time").find_next().text.strip()
         world_age_text = soup.find(string="World age").find_next().text.strip()
 
         downtime_history_index = uptime_text.find("Downtime History")
@@ -33,7 +33,7 @@ def get_server_info():
         return None, None, None
 
 
-@tasks.loop(seconds=120)#recheck every 2 mins
+@tasks.loop(seconds=90)
 async def send_server_info():
     global last_player_count, first_run
     player_count, uptime, world_age = get_server_info()
@@ -43,9 +43,10 @@ async def send_server_info():
             channel = client.get_channel(CHANNEL_ID)
             if channel:
                 await channel.send("**-----------------------------------------**")
-                await channel.send(f"\n```Current Player Count: {player_count} on Server 3.```")
-                await channel.send(f"```Server Uptime: {uptime}```")
-                await channel.send(f"```World Age: {world_age}```")
+                await channel.send("7 Days to Die -- PoBx Server 3")
+                await channel.send(f"\n```powershell\n-[ Players ]: [{player_count}]```")
+                await channel.send(f"```powershell\n-[ Time    ]: [{uptime}]```")
+                await channel.send(f"```powershell\n-[ Age     ]: [{world_age}]```")
                 await channel.send("**-----------------------------------------**")
             first_run = False
         last_player_count = player_count

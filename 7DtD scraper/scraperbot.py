@@ -2,18 +2,16 @@ import requests
 from bs4 import BeautifulSoup
 import discord
 from discord.ext import tasks
-#discord api token
-TOKEN = 'Your discord API'
 
-CHANNEL_ID = 1155345464741331055  # replace with your channel ID
-
-#url we want to extract stuff from
-URL = "https://www.battlemetrics.com/servers/7dtd/22746546?playerCount=RT"
+#discord bot api
+TOKEN = 'YOUR DISCORD API'
+CHANNEL_ID = 1155345464741331055  # discord channel id
+URL = "https://www.battlemetrics.com/servers/7dtd/22746546?playerCount=RT" #url to extract data from
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
-
+#what to extract
 def get_server_info():
     try:
         response = requests.get(URL)
@@ -23,12 +21,8 @@ def get_server_info():
         player_count_numeric = int(player_count_text.split('/')[0])
         uptime_text = soup.find(string="Current server time").find_next().text.strip()
         world_age_text = soup.find(string="World age").find_next().text.strip()
-
-        downtime_history_index = uptime_text.find("Downtime History")
-        if downtime_history_index != -1:
-            uptime_text = uptime_text[:downtime_history_index].strip()
         return player_count_numeric, uptime_text, world_age_text
-    except (requests.RequestException, ValueError) as e:
+    except (requests.RequestException, ValueError, requests.HTTPError) as e:
         print(f"Error fetching server information: {e}")
         return None, None, None
 
@@ -42,11 +36,25 @@ async def send_server_info():
         if first_run or (last_player_count is not None and player_count != last_player_count):
             channel = client.get_channel(CHANNEL_ID)
             if channel:
+                try:
+                    day = int(uptime.split(',')[0].split(' ')[1])
+                    day += 1  # add +1 to day
+                except (IndexError, ValueError):
+                    day = None
                 await channel.send("**-----------------------------------------**")
                 await channel.send("7 Days to Die -- PoBx Server 3")
-                await channel.send(f"\n```powershell\n-[ Players ]: [{player_count}]```")
-                await channel.send(f"```powershell\n-[ Time    ]: [{uptime}]```")
-                await channel.send(f"```powershell\n-[ Age     ]: [{world_age}]```")
+                await channel.send(f"\n```powershell\n-[ Players     ]: [{player_count}]```")
+                await channel.send(
+                    f"```powershell\n-[ Day/Time    ]: [{uptime.split(',')[0].split(' ')[0]} {day},{uptime.split(',')[1]}]```")
+                await channel.send(f"```powershell\n-[ World Age   ]: [{world_age}]```")
+
+                if day is not None:
+                    if day % 7 == 0:
+                        await channel.send(f"```powershell\n-[HORDE NIGHT! BE PREPARED!]```")
+                    else:
+                        days_until_horde = 7 - (day % 7)
+                        await channel.send(f"```powershell\n-[ Horde Night ]: [{days_until_horde} Days]```")
+
                 await channel.send("**-----------------------------------------**")
             first_run = False
         last_player_count = player_count
@@ -54,7 +62,7 @@ async def send_server_info():
 
 @client.event
 async def on_ready():
-    print(f'We have logged in as {client.user}')
+    print(f'{client.user} is home!')
     send_server_info.start()
 
 

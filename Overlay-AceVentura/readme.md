@@ -1,6 +1,6 @@
 # Overlay-AceVentura
 
-**Overlay-AceVentura** is a Python script that creates a different kind of overlay ransom on your computer screen. Instead of demanding Bitcoin, it demands you watch Ace Ventura Pet Detective. And boy will whoever runs this script. Because it locks your screen and forces you to while trolling you with messages.
+**Overlay-AceVentura** is a Python script that creates a different kind of overlay ransom on your computer screen. Instead of demanding Bitcoin, it demands you watch Ace Ventura Pet Detective. And boy will whoever runs this script. Because it locks your screen and forces you to while trolling you with messages. In all seriousness, this is a joke demo to demo overlay attacks.
 
 ## Usage
 

@@ -21,4 +21,6 @@
 
 3. Once the script is running, copy some text or content to your clipboard.
 
-4. A notification bubble with the text "Copied!" will appear near your cursor's position to indicate that new content has been copied.
+4. I would suggest turning the py into an exe and adding to your registry :)
+
+5. A notification bubble with the text "Copied!" will appear near your cursor's position to indicate that new content has been copied.
